@@ -1,6 +1,33 @@
 <?php
 
+use Doctrine\DBAL\DriverManager;
+use Psr\Container\ContainerInterface;
+
 require_once __DIR__ . '/../vendor/autoload.php';
+
+// load env vars
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+
+$container_builder = new \DI\ContainerBuilder();
+$container_builder->addDefinitions([
+    'config.database' => require __DIR__ . '/../config/database.php',
+    \Doctrine\DBAL\Connection::class => function (ContainerInterface $c): \Doctrine\DBAL\Connection{
+      $params = $c->get('config.database');
+      return DriverManager::getConnection($params);
+    }
+]);
+
+try {
+    $container = $container_builder->build();
+    $conn = $container->get(\Doctrine\DBAL\Connection::class);
+
+} catch (Exception $e) {
+    throw new Exception($e->getMessage());
+}
+
+
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->post('/graphql', [App\Controller\GraphQL::class, 'handle']);

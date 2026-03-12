@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: scandiweb_app
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: ${APP_ENV:-dev}
+      APP_NAME: ${APP_NAME:-scandiweb_ecommerce_task}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-scandiweb}
+      DB_USERNAME: ${DB_USERNAME:-scandiweb}
+      DB_PASSWORD: ${DB_PASSWORD:-scandiweb_pass}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - scandiweb_network
+
+  mysql:
+    image: mysql:8.4
+    container_name: scandiweb_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-scandiweb}
+      MYSQL_USER: ${DB_USER:-scandiweb}
+      MYSQL_PASSWORD: ${DB_PASS:-scandiweb_pass}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-rootpass}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - scandiweb_network
+
+volumes:
+  mysql_data:
+
+networks:
+  scandiweb_network:
+    driver: bridge
