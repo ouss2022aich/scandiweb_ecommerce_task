@@ -82,9 +82,19 @@ abstract class Product
         return $this->description;
     }
 
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
     public function isInStock(): bool
     {
         return $this->inStock;
+    }
+
+    public function setInStock(bool $inStock): void
+    {
+        $this->inStock = $inStock;
     }
 
     public function getCategory(): Category

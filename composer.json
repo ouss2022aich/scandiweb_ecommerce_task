@@ -22,7 +22,8 @@
     "scripts": {
         "dev" : "docker compose up -d",
         "build" : "docker compose up --build -d",
-        "doctrine" : "php doctrine.php"
+        "doctrine" : "php config/database/doctrine.php",
+        "seed" : "php config/database/seeds/seed.php"
     },
     "require-dev": {
         "symfony/var-dumper": "^7.4"

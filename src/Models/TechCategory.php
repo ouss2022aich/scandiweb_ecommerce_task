@@ -22,6 +22,7 @@ class TechCategory extends Category
     {
         return $attribute instanceof ColorAttribute
             || $attribute instanceof SizeAttribute
-            || $attribute instanceof CapacityAttribute;
+            || $attribute instanceof CapacityAttribute
+            || $attribute instanceof TextAttribute;
     }
 }

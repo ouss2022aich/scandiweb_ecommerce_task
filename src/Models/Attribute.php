@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
     'size' => SizeAttribute::class,
     'color' => ColorAttribute::class,
     'capacity' => CapacityAttribute::class,
+    'text' => TextAttribute::class,
 ])]
 abstract class Attribute
 {

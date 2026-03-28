@@ -19,6 +19,7 @@ services:
         condition: service_healthy
     volumes:
       - ./:/var/www/html
+      - uploads_data:/var/www/html/public/uploads
     networks:
       - scandiweb_network
 
@@ -45,6 +46,7 @@ services:
 
 volumes:
   mysql_data:
+  uploads_data:
 
 networks:
   scandiweb_network:
