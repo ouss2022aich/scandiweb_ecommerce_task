@@ -11,9 +11,9 @@ services:
       APP_NAME: ${APP_NAME:-scandiweb_ecommerce_task}
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE:-scandiweb}
-      DB_USERNAME: ${DB_USERNAME:-scandiweb}
-      DB_PASSWORD: ${DB_PASSWORD:-scandiweb_pass}
+      DB_DATABASE: ${DB_NAME:-scandiweb}
+      DB_USERNAME: ${DB_USER:-scandiweb}
+      DB_PASSWORD: ${DB_PASS:-scandiweb_pass}
     depends_on:
       mysql:
         condition: service_healthy

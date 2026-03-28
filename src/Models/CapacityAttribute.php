@@ -7,13 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class CapacityAttribute extends Attribute
 {
-    public function supportsTechProducts(): bool
+    public function getType(): string
     {
-        return false;
-    }
-
-    public function supportsClothingProducts(): bool
-    {
-        return true;
+        return 'text';
     }
 }

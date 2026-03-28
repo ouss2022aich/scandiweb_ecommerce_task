@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -23,11 +25,39 @@ abstract class Attribute
     #[ORM\Column(type: 'string', length: 100)]
     protected string $name;
 
+    #[ORM\OneToMany(mappedBy: 'attribute', targetEntity: AttributeItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    protected Collection $items;
+
     public function __construct(string $name)
     {
         $this->name = $name;
+        $this->items = new ArrayCollection();
     }
 
-    abstract public function supportsTechProducts(): bool;
-    abstract public function supportsClothingProducts(): bool;
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(AttributeItem $item): void
+    {
+        if ($this->items->contains($item)) {
+            return;
+        }
+
+        $this->items->add($item);
+        $item->setAttribute($this);
+    }
+
+    abstract public function getType(): string;
 }

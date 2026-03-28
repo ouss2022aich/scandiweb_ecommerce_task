@@ -7,13 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class ColorAttribute extends Attribute
 {
-    public function supportsTechProducts(): bool
+    public function getType(): string
     {
-        return true;
-    }
-
-    public function supportsClothingProducts(): bool
-    {
-        return false;
+        return 'swatch';
     }
 }

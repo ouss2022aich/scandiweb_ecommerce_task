@@ -16,12 +16,12 @@ $container_builder->addDefinitions([
     \Doctrine\DBAL\Connection::class => function (ContainerInterface $c): \Doctrine\DBAL\Connection{
       $params = $c->get('config.database');
       return DriverManager::getConnection($params);
-    }
+    },
 ]);
 
 try {
     $container = $container_builder->build();
-    $conn = $container->get(\Doctrine\DBAL\Connection::class);
+    $container->get(\Doctrine\DBAL\Connection::class);
 
 } catch (Exception $e) {
     throw new Exception($e->getMessage());

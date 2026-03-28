@@ -7,27 +7,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'categories')]
-#[ORM\InheritanceType('JOINED')]
-#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
-#[ORM\DiscriminatorMap([
-    'all' => AllCategory::class,
-    'tech' => TechCategory::class,
-    'clothes' => ClothesCategory::class,
-])]
-abstract class Category
+#[ORM\Table(name: 'brands')]
+class Brand
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
+    protected ?int $id = null;
+
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     protected string $name;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
+    #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Product::class)]
     protected Collection $products;
 
     public function __construct(string $name)
     {
         $this->name = $name;
         $this->products = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getName(): string
@@ -47,13 +49,6 @@ abstract class Category
         }
 
         $this->products->add($product);
-
-        if ($product->getCategory() !== $this) {
-            $product->setCategory($this);
-        }
+        $product->setBrand($this);
     }
-
-    abstract public function getCode(): string;
-
-    abstract public function supportsAttribute(Attribute $attribute): bool;
 }
