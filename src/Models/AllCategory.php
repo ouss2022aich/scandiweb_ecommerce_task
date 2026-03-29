@@ -17,9 +17,4 @@ class AllCategory extends Category
     {
         return 'all';
     }
-
-    public function supportsAttribute(Attribute $attribute): bool
-    {
-        return true;
-    }
 }

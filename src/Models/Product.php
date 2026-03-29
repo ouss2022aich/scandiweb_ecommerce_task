@@ -185,5 +185,19 @@ abstract class Product
         $productAttributeItem->setProduct($this);
     }
 
-    abstract protected function supportsCategory(Category $category): bool;
+    public function getType(): string
+    {
+        return static::TYPE;
+    }
+
+    protected function supportsCategory(Category $category): bool
+    {
+        return $category->getCode() === 'all'
+            || in_array($category->getCode(), $this->supportedCategoryCodes(), true);
+    }
+
+    /**
+     * @return string[]
+     */
+    abstract protected function supportedCategoryCodes(): array;
 }

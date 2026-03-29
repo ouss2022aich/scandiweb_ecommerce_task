@@ -53,7 +53,10 @@ abstract class Category
         }
     }
 
-    abstract public function getCode(): string;
+    public function supportsAttribute(Attribute $attribute): bool
+    {
+        return $attribute->supportsCategory($this);
+    }
 
-    abstract public function supportsAttribute(Attribute $attribute): bool;
+    abstract public function getCode(): string;
 }

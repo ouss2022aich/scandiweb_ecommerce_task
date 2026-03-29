@@ -17,10 +17,4 @@ class ClothesCategory extends Category
     {
         return 'clothes';
     }
-
-    public function supportsAttribute(Attribute $attribute): bool
-    {
-        return $attribute instanceof ColorAttribute
-            || $attribute instanceof SizeAttribute;
-    }
 }

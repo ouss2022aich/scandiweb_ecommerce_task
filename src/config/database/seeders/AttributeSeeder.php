@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\config\database\seeders;
 
+use App\Factories\Attribute\AttributeFactory;
 use App\Models\Attribute;
 use App\Models\AttributeItem;
-use App\Models\CapacityAttribute;
-use App\Models\ColorAttribute;
-use App\Models\SizeAttribute;
-use App\Models\TextAttribute;
 use Doctrine\ORM\EntityManager;
-use InvalidArgumentException;
 
 class AttributeSeeder
 {
+    public function __construct(
+        private readonly AttributeFactory $attributeFactory = new AttributeFactory(),
+    ) {
+    }
+
     public function seed(EntityManager $entityManager, array $attributes): void
     {
         $attributeRepository = $entityManager->getRepository(Attribute::class);
@@ -24,7 +25,7 @@ class AttributeSeeder
             $attribute = $attributeRepository->findOneBy(['name' => $attributeData['name']]);
 
             if ($attribute === null) {
-                $attribute = $this->createAttribute($attributeData['name'], $attributeData['type']);
+                $attribute = $this->attributeFactory->create($attributeData['name'], $attributeData['type']);
                 $entityManager->persist($attribute);
                 $entityManager->flush();
             }
@@ -46,20 +47,5 @@ class AttributeSeeder
                 ));
             }
         }
-    }
-
-    private function createAttribute(string $name, string $type): Attribute
-    {
-        return match (true) {
-            $name === 'Size' => new SizeAttribute($name),
-            $name === 'Color' && $type === 'swatch' => new ColorAttribute($name),
-            $name === 'Capacity' => new CapacityAttribute($name),
-            $type === 'text' => new TextAttribute($name),
-            default => throw new InvalidArgumentException(sprintf(
-                'Unsupported attribute "%s" with type "%s".',
-                $name,
-                $type,
-            )),
-        };
     }
 }

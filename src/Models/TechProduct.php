@@ -6,9 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class TechProduct extends Product
 {
-    protected function supportsCategory(Category $category): bool
+    public const TYPE = 'tech';
+
+    protected function supportedCategoryCodes(): array
     {
-        return $category instanceof TechCategory
-            || $category instanceof AllCategory;
+        return ['tech'];
     }
 }

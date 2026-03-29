@@ -17,12 +17,4 @@ class TechCategory extends Category
     {
         return 'tech';
     }
-
-    public function supportsAttribute(Attribute $attribute): bool
-    {
-        return $attribute instanceof ColorAttribute
-            || $attribute instanceof SizeAttribute
-            || $attribute instanceof CapacityAttribute
-            || $attribute instanceof TextAttribute;
-    }
 }

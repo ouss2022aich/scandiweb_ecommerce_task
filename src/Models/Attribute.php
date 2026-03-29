@@ -60,5 +60,16 @@ abstract class Attribute
         $item->setAttribute($this);
     }
 
+    public function supportsCategory(Category $category): bool
+    {
+        return $category->getCode() === 'all'
+            || in_array($category->getCode(), $this->supportedCategoryCodes(), true);
+    }
+
+    /**
+     * @return string[]
+     */
+    abstract protected function supportedCategoryCodes(): array;
+
     abstract public function getType(): string;
 }

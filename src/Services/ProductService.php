@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Factories\Product\ProductFactory;
 use App\Models\Attribute;
 use App\Models\AttributeItem;
 use App\Models\Brand;
 use App\Models\Category;
-use App\Models\ClothesProduct;
 use App\Models\Currency;
 use App\Models\GalleryItem;
 use App\Models\Price;
 use App\Models\Product;
 use App\Models\ProductAttributeItem;
-use App\Models\TechProduct;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 
@@ -23,6 +22,7 @@ class ProductService
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly GalleryUploadService $galleryUploadService = new GalleryUploadService(),
+        private readonly ProductFactory $productFactory = new ProductFactory(),
     ) {
     }
 
@@ -81,7 +81,7 @@ class ProductService
         return [
             'id' => $product->getSlug(),
             'slug' => $product->getSlug(),
-            'type' => $this->resolveProductType($product),
+            'type' => $product->getType(),
             'name' => $product->getName(),
             'description' => $product->getDescription(),
             'inStock' => $product->isInStock(),
@@ -134,15 +134,6 @@ class ProductService
         return array_values($grouped);
     }
 
-    private function resolveProductType(Product $product): string
-    {
-        return match (true) {
-            $product instanceof TechProduct => 'tech',
-            $product instanceof ClothesProduct => 'clothes',
-            default => throw new InvalidArgumentException('Unsupported product type.'),
-        };
-    }
-
     private function createProductEntity(
         string $type,
         string $slug,
@@ -150,11 +141,7 @@ class ProductService
         Category $category,
         Brand $brand,
     ): Product {
-        return match ($type) {
-            'tech' => new TechProduct($slug, $name, $category, $brand),
-            'clothes' => new ClothesProduct($slug, $name, $category, $brand),
-            default => throw new InvalidArgumentException(sprintf('Unsupported product type "%s".', $type)),
-        };
+        return $this->productFactory->create($type, $slug, $name, $category, $brand);
     }
 
     private function findCategory(string $name): Category
